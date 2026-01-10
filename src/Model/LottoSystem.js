@@ -5,7 +5,6 @@ import { Lotto } from "./Lotto.js";
 class LottoSystem {
   #lottoInstances;
   #lottoArr;
-  #result;
   constructor() {
     this.#lottoArr = [];
     this.#lottoInstances = [];
@@ -33,39 +32,33 @@ class LottoSystem {
   }
 
   match(winningNum, bonusNum) {
-    const result = [
-      [LOTTO.MATCH.ZERO.RANK, 0],
-      [LOTTO.MATCH.FIVE.RANK, 0],
-      [LOTTO.MATCH.FOUR_BONUS.RANK, 0],
-      [LOTTO.MATCH.FOUR.RANK, 0],
-      [LOTTO.MATCH.THREE_BONUS.RANK, 0],
-      [LOTTO.MATCH.TWO_BONUS.RANK, 0],
-    ];
     for (const lotto of this.#lottoInstances) {
       const [match, isBonusMatch] = lotto.match(winningNum, bonusNum);
 
       if (match === LOTTO.MATCH.ZERO.NUMBER) result[LOTTO.MATCH.ZERO.RANK][1]++;
-
       if (match === LOTTO.MATCH.TWO_BONUS.NUMBER && isBonusMatch)
         result[LOTTO.MATCH.TWO_BONUS.RANK][1]++;
-
       if (match === LOTTO.MATCH.THREE_BONUS.NUMBER && isBonusMatch)
         result[LOTTO.MATCH.THREE_BONUS.RANK][1]++;
-
       if (match === LOTTO.MATCH.FOUR.NUMBER) result[LOTTO.MATCH.FOUR.RANK][1]++;
-
       if (match === LOTTO.MATCH.FOUR_BONUS.NUMBER && isBonusMatch)
         result[LOTTO.MATCH.FOUR_BONUS.RANK][1]++;
-
       if (match === LOTTO.MATCH.FIVE.NUMBER) result[LOTTO.MATCH.FIVE.RANK][1]++;
     }
-
-    this.#result = result;
   }
 
   getResult() {
-    return new Map(this.#result);
+    return new Map(result);
   }
 }
+
+const result = [
+  [LOTTO.MATCH.ZERO.RANK, 0],
+  [LOTTO.MATCH.FIVE.RANK, 0],
+  [LOTTO.MATCH.FOUR_BONUS.RANK, 0],
+  [LOTTO.MATCH.FOUR.RANK, 0],
+  [LOTTO.MATCH.THREE_BONUS.RANK, 0],
+  [LOTTO.MATCH.TWO_BONUS.RANK, 0],
+];
 
 export const lottoSystem = new LottoSystem();
