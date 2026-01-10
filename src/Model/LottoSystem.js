@@ -11,7 +11,7 @@ class LottoSystem {
   }
 
   createLotto(amount) {
-    const count = amount / LOTTO.PRICE;
+    const count = amount / LOTTO.PRICE.MIN;
 
     for (let i = 0; i < count; i++) {
       const randomNum = Random.pickUniqueNumbersInRange(
@@ -49,6 +49,11 @@ class LottoSystem {
 
   getResult() {
     return new Map(result);
+  }
+
+  getProfitRate() {
+    const amount = this.#lottoInstances.length * LOTTO.PRICE.MIN;
+    let prize = 0;
   }
 }
 
