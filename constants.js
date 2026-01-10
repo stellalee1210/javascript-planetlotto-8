@@ -1,7 +1,3 @@
-export const DEFAULT = Object.freeze({
-  START: "",
-});
-
 export const LOTTO = Object.freeze({
   PRICE: 500,
   COUNT: 5,
