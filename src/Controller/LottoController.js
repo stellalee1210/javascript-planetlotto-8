@@ -10,6 +10,9 @@ export const LottoController = {
 
     const winningNum = await this.getWinningNum();
     const bonusNum = await this.getBonusNum(winningNum);
+
+    lottoSystem.match(winningNum, bonusNum);
+    OutputView.printResult(lottoSystem.getResult());
   },
 
   async getAmount() {
