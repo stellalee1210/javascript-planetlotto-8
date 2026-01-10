@@ -14,6 +14,21 @@
 
 구입 금액 입력 → 검증 → 구입 금액을 500으로 나누기 → 개수만큼 로또 자동 발행하기 → 당첨 번호 입력 받기 → 검증 → 보너스 번호 입력하기 → 검증 → 비교한 결과 출력
 
+view 정리
+
+InputView
+
+- askAmount : 구입 금액 입력 기능, 미리 숫자를 검증하여 Number로 리턴. 에러 값 앞에 [ERROR] 부재
+- askWinningLotto : 당첨번호 입력 기능, 미리 ‘,’으로 전부 split하고 숫자로 변형하여 리턴. 에러 값 앞에 [ERROR] 부재
+- askBonusNumber : 보너스 번호 입력 기능, 미리 숫자를 검증하여 Number로 리턴. 에러 값 앞에 [ERROR] 부재
+
+OutputView
+
+- printPurchasedLottos : 자동 발행된 로또 출력. 인자로 2차원 배열을 받음.
+- printResult : Map 형태로 인자를 받음. <등수, 개수>
+  - 0번 : 미당첨
+  - 1~5번 : 1~5등
+
 <테스트 기능>
 
 ApplicationTest
