@@ -8,7 +8,7 @@ class DarkLotto {
   }
 
   #pickRandom() {
-    this.#randomNum = Random.pickUniqueNumbersInRange(1, 30, 1);
+    this.#randomNum = Random.pickUniqueNumbersInRange(1, 5, 1);
   }
 
   isMatch(guess) {
