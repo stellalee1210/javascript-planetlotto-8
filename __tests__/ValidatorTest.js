@@ -5,7 +5,7 @@ describe("Validator - 구입금액 검증 기능 단위 테스트", () => {
     const input = "";
 
     expect(() => {
-      Validator.buyingPrice(input);
+      Validator.amount(input);
     }).toThrow("[ERROR]");
   });
 
@@ -13,7 +13,7 @@ describe("Validator - 구입금액 검증 기능 단위 테스트", () => {
     const input = "1300";
 
     expect(() => {
-      Validator.buyingPrice(input);
+      Validator.amount(input);
     }).toThrow("[ERROR]");
   });
 
@@ -21,7 +21,7 @@ describe("Validator - 구입금액 검증 기능 단위 테스트", () => {
     const input = "-500";
 
     expect(() => {
-      Validator.buyingPrice(input);
+      Validator.amount(input);
     }).toThrow("[ERROR]");
   });
 });
