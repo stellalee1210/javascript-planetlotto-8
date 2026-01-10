@@ -60,9 +60,9 @@ ApplicationTest
 LottoSystem (Class)
 
 - lottoInstances : Lotto 객체 배열을 저장
-- [ ] createLotto : 로또 번호 자동 발행 로직
+- [x] createLotto : 로또 번호 자동 발행 로직
 - [ ] match : Lotto 객체의 match 메서드를 사용하여 당첨 여부를 판단 후 result 객체에 저장
-- [ ]
+- [ ] getLottoNum()
 
 Lotto (Class)
 
@@ -71,36 +71,28 @@ Lotto (Class)
 
 Validator
 
-- [ ] buyingPrice : 구입 금액 검증 기능
-  - [ ] 500원 단위로 떨어지지 않는 수
-  - [ ] 음수
-  - [ ] 빈 값
-- [ ] winningNum : 당첨 번호 검증 기능
-  - [ ] 5개를 충족하지 않는 번호 목록
-  - [ ] 목록 내에서 중복되는 수
-  - [ ] 범위를 넘어선 숫자
-- [ ] bonusNum : 보너스 번호 검증 기능
-  - [ ] 빈 값
-  - [ ] 범위를 넘어선 숫자
-  - [ ] 당첨 번호와 중복되는 수
+- [x] buyingPrice : 구입 금액 검증 기능
+  - [x] 500원 단위로 떨어지지 않는 수
+  - [x] 0 또는 음수
+- [x] winningNum : 당첨 번호 검증 기능
+  - [x] 5개를 충족하지 않는 번호 목록
+  - [x] 목록 내에서 중복되는 수
+  - [x] 범위를 넘어선 숫자
+- [x] bonusNum : 보너스 번호 검증 기능
+  - [x] 범위를 넘어선 숫자
+  - [x] 당첨 번호와 중복되는 수
 
 ### Controller
 
 lottoController
 
-- [ ] 로또 구입 금액 입력 요청 & 검증
-- [ ] 로또 구입 금액만큼 자동 발행 요청
-  - [ ] 자동 발행한 로또 출력 요청
-- [ ] 당첨 번호 입력 요청 & 검증
-- [ ] 보너스 번호 입력 요청 & 검증
+- [x] 로또 구입 금액 입력 요청 & 검증
+- [x] 로또 구입 금액만큼 자동 발행 요청
+  - [x] 자동 발행한 로또 출력 요청
+- [x] 당첨 번호 입력 요청 & 검증
+- [x] 보너스 번호 입력 요청 & 검증
 - [ ] LottoSystem에 비교 과정 진행 요청
 - [ ] 결과 메세지 요청 → 출력
-
-### Utils
-
-parser
-
-- [ ] comma : `,` 를 기준으로 split
 
 ### constants.js
 
