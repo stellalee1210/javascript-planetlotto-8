@@ -22,5 +22,12 @@ export const Validator = {
         throw Error(ERROR.NUMBER_OUT_OF_RANGE);
     }
   },
-  bonusNum(input) {},
+
+  //인자는 숫자
+  bonusNum(input, winningNum) {
+    if (input < LOTTO.RANGE.MIN || input > LOTTO.RANGE.MAX)
+      throw Error(ERROR.NUMBER_OUT_OF_RANGE);
+
+    if (winningNum.includes(input)) throw Error(ERROR.BONUS_DUPLICATE);
+  },
 };
