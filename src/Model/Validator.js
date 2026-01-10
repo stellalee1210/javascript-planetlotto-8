@@ -15,7 +15,7 @@ export const Validator = {
       throw Error(ERROR.WINNING_COUNT_OUT_OF_RANGE);
 
     const set = new Set(input);
-    if (set.size !== LOTTO.COUNT) throw Error(ERROR.WINNING_COUNT_OUT_OF_RANGE);
+    if (set.size !== LOTTO.COUNT) throw Error(ERROR.WINNING_NUM_SAME);
 
     for (const number of input) {
       if (number < LOTTO.RANGE.MIN || number > LOTTO.RANGE.MAX)
