@@ -4,9 +4,11 @@ export const Validator = {
   //인자는 숫자
   amount(input) {
     const number = Number(input);
-    if (Number.isNaN(number)) throw Error(ERROR);
-    if (number % LOTTO.PRICE !== 0) throw Error(ERROR.NOT_DIVISIBLE);
+    if (Number.isNaN(number)) throw Error(ERROR.NAN);
     if (number < LOTTO.RANGE.MIN) throw Error(ERROR.NOT_POSITIVE);
+    if (number < LOTTO.PRICE.MIN || number > LOTTO.PRICE.MAX)
+      throw Error(ERROR.BUY_LIMIT);
+    if (number % LOTTO.PRICE.MIN !== 0) throw Error(ERROR.NOT_DIVISIBLE);
   },
 
   //인자는 배열, 요소 숫자

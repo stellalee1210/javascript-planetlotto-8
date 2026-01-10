@@ -1,5 +1,8 @@
 export const LOTTO = Object.freeze({
-  PRICE: 500,
+  PRICE: {
+    MIN: 500,
+    MAX: 50000,
+  },
   COUNT: 5,
   RANGE: { MIN: 1, MAX: 30 },
   MATCH: {
@@ -13,6 +16,7 @@ export const LOTTO = Object.freeze({
 });
 
 export const ERROR = Object.freeze({
+  BUY_LIMIT: "로또는 500원 이상 50,000원 이하로 구매 가능합니다.",
   NAN: "구매금액은 숫자여야 합니다.",
   NOT_POSITIVE: "0 또는 음수는 입력할 수 없습니다.",
   NOT_DIVISIBLE: "500원으로 나눌 수 없습니다.",
