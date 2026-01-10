@@ -17,6 +17,6 @@ export const ERROR = Object.freeze({
   NOT_DIVISIBLE: "500원으로 나눌 수 없습니다.",
   WINNING_COUNT_OUT_OF_RANGE: "당첨 번호는 오직 5개만 입력이 가능합니다.",
   WINNING_NUM_SAME: "같은 값은 입력할 수 없습니다.",
-  NUMBE_OUT_OF_RANGE: "1~30사이의 중복되지 않은 값만 입력이 가능합니다.",
+  NUMBER_OUT_OF_RANGE: "1~30사이의 중복되지 않은 값만 입력이 가능합니다.",
   BONUS_DUPLICATE: "당첨 번호와 중복되지 않는 보너스 번호를 입력해주세요.",
 });

@@ -7,6 +7,8 @@ export const LottoController = {
     const amount = await this.getAmount();
     lottoSystem.createLotto(amount);
     OutputView.printPurchasedLottos(lottoSystem.getLottoNum());
+
+    const winningNum = await this.getWinningNum();
   },
 
   async getAmount() {
@@ -15,6 +17,18 @@ export const LottoController = {
         const amount = await InputView.askAmount();
         Validator.amount(amount);
         return amount;
+      } catch (error) {
+        OutputView.printErrorMessage(error.message);
+      }
+    }
+  },
+
+  async getWinningNum() {
+    while (true) {
+      try {
+        const winningNum = await InputView.askWinningLotto();
+        Validator.winningNum(winningNum);
+        return winningNum;
       } catch (error) {
         OutputView.printErrorMessage(error.message);
       }
