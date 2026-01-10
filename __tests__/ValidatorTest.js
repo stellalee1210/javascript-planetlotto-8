@@ -1,4 +1,4 @@
-import { ERROR } from "../constants.js";
+import { ERROR } from "../src/constants.js";
 import { Validator } from "../src/Model/Validator.js"; // 경로 주의!
 
 describe("Validator - 구입금액 검증 기능 단위 테스트", () => {

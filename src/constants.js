@@ -1,3 +1,7 @@
+export const PROFIT = Object.freeze({
+  MSG: { START: "현재 수익률은 : ", END: "%입니다.\n" },
+});
+
 export const LOTTO = Object.freeze({
   PRICE: {
     MIN: 500,
@@ -6,12 +10,12 @@ export const LOTTO = Object.freeze({
   COUNT: 5,
   RANGE: { MIN: 1, MAX: 30 },
   MATCH: {
-    ZERO: { RANK: 0, NUMBER: 0 },
-    TWO_BONUS: { RANK: 5, NUMBER: 2 },
-    THREE_BONUS: { RANK: 4, NUMBER: 3 },
-    FOUR: { RANK: 3, NUMBER: 4 },
-    FOUR_BONUS: { RANK: 2, NUMBER: 4 },
-    FIVE: { RANK: 1, NUMBER: 5 },
+    ZERO: { RANK: 0, NUMBER: 0, PRIZE: 0 },
+    TWO_BONUS: { RANK: 5, NUMBER: 2, PRIZE: 5000 },
+    THREE_BONUS: { RANK: 4, NUMBER: 3, PRIZE: 500000 },
+    FOUR: { RANK: 3, NUMBER: 4, PRIZE: 1500000 },
+    FOUR_BONUS: { RANK: 2, NUMBER: 4, PRIZE: 10000000 },
+    FIVE: { RANK: 1, NUMBER: 5, PRIZE: 100000000 },
   },
 });
 

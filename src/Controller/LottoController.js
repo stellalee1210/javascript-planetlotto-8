@@ -1,6 +1,7 @@
 import { lottoSystem } from "../Model/LottoSystem.js";
 import { Validator } from "../Model/Validator.js";
 import { InputView, OutputView } from "../view.js";
+import { DarkOutputView } from "../View/DarkOutputView.js";
 
 export const LottoController = {
   async start() {
@@ -13,6 +14,7 @@ export const LottoController = {
 
     lottoSystem.match(winningNum, bonusNum);
     OutputView.printResult(lottoSystem.getResult());
+    DarkOutputView.profit(lottoSystem.getProfitRate());
   },
 
   async getAmount() {

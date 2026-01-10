@@ -52,8 +52,20 @@ class LottoSystem {
   }
 
   getProfitRate() {
-    const amount = this.#lottoInstances.length * LOTTO.PRICE.MIN;
-    let prize = 0;
+    const totalExpense = this.#lottoInstances.length * LOTTO.PRICE.MIN;
+    let totalProfit = 0;
+
+    totalProfit += result[LOTTO.MATCH.ZERO.RANK][1] * LOTTO.MATCH.ZERO.PRIZE;
+    totalProfit +=
+      result[LOTTO.MATCH.TWO_BONUS.RANK][1] * LOTTO.MATCH.TWO_BONUS.PRIZE;
+    totalProfit +=
+      result[LOTTO.MATCH.THREE_BONUS.RANK][1] * LOTTO.MATCH.THREE_BONUS.PRIZE;
+    totalProfit += result[LOTTO.MATCH.FOUR.RANK][1] * LOTTO.MATCH.FOUR.PRIZE;
+    totalProfit +=
+      result[LOTTO.MATCH.FOUR_BONUS.RANK][1] * LOTTO.MATCH.FOUR_BONUS.PRIZE;
+    totalProfit += result[LOTTO.MATCH.FIVE.RANK][1] * LOTTO.MATCH.FIVE.PRIZE;
+
+    return Number(((totalProfit / totalExpense) * 100).toFixed(1));
   }
 }
 
