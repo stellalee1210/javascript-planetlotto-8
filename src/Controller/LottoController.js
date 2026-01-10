@@ -6,6 +6,7 @@ export const LottoController = {
   async start() {
     const amount = await this.getAmount();
     lottoSystem.createLotto(amount);
+    OutputView.printPurchasedLottos(lottoSystem.getLottoNum());
   },
 
   async getAmount() {
