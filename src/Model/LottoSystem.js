@@ -1,5 +1,5 @@
 import { Random } from "@woowacourse/mission-utils";
-import { LOTTO } from "../../constants.js";
+import { LOTTO } from "../constants.js";
 import { Lotto } from "./Lotto.js";
 
 class LottoSystem {

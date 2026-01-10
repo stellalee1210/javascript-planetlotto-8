@@ -1,4 +1,4 @@
-import { ERROR, LOTTO } from "../../constants.js";
+import { ERROR, LOTTO } from "../constants.js";
 
 export const Validator = {
   //인자는 숫자
