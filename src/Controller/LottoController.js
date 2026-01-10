@@ -1,7 +1,9 @@
+import { PROFIT } from "../constants.js";
 import { lottoSystem } from "../Model/LottoSystem.js";
 import { Validator } from "../Model/Validator.js";
 import { InputView, OutputView } from "../view.js";
 import { DarkOutputView } from "../View/DarkOutputView.js";
+import { DarkLottoController } from "./DarkLottoController.js";
 
 export const LottoController = {
   async start() {
@@ -14,7 +16,7 @@ export const LottoController = {
 
     lottoSystem.match(winningNum, bonusNum);
     OutputView.printResult(lottoSystem.getResult());
-    DarkOutputView.profit(lottoSystem.getProfitRate());
+    this.getProfit();
   },
 
   async getAmount() {
@@ -51,5 +53,10 @@ export const LottoController = {
         OutputView.printErrorMessage(error.message);
       }
     }
+  },
+  getProfit() {
+    const [profit, profitRate] = lottoSystem.getProfitRate();
+    DarkOutputView.profit(profitRate);
+    if (profitRate > PROFIT.APPEAR_RATE) DarkLottoController.process(profit);
   },
 };

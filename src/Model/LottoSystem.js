@@ -65,7 +65,10 @@ class LottoSystem {
       result[LOTTO.MATCH.FOUR_BONUS.RANK][1] * LOTTO.MATCH.FOUR_BONUS.PRIZE;
     totalProfit += result[LOTTO.MATCH.FIVE.RANK][1] * LOTTO.MATCH.FIVE.PRIZE;
 
-    return Number(((totalProfit / totalExpense) * 100).toFixed(1));
+    return [
+      totalProfit,
+      Number(((totalProfit / totalExpense) * 100).toFixed(1)),
+    ];
   }
 }
 

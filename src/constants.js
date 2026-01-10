@@ -1,5 +1,6 @@
 export const PROFIT = Object.freeze({
   MSG: { START: "현재 수익률은 : ", END: "%입니다.\n" },
+  APPEAR_RATE: 1000,
 });
 
 export const LOTTO = Object.freeze({
