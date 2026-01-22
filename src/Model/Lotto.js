@@ -4,6 +4,10 @@ export class Lotto {
     this.#numbers = numbers;
   }
 
+  toString() {
+    return [...this.#numbers];
+  }
+
   match(winningNum, bonusNum) {
     const match = winningNum.filter((number) =>
       this.#numbers.includes(number)

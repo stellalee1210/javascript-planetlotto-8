@@ -4,9 +4,7 @@ import { Lotto } from "./Lotto.js";
 
 class LottoSystem {
   #lottoInstances;
-  #lottoArr;
   constructor() {
-    this.#lottoArr = [];
     this.#lottoInstances = [];
   }
 
@@ -20,15 +18,14 @@ class LottoSystem {
         LOTTO.COUNT
       );
       const sortedNum = randomNum.sort((a, b) => a - b);
-      const lotto = new Lotto(sortedNum);
 
-      this.#lottoArr.push(sortedNum);
+      const lotto = new Lotto(sortedNum);
       this.#lottoInstances.push(lotto);
     }
   }
 
   getLottoNum() {
-    return this.#lottoArr;
+    return this.#lottoInstances.map((lotto) => lotto.toString());
   }
 
   match(winningNum, bonusNum) {

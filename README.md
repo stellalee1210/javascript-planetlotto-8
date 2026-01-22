@@ -227,3 +227,93 @@ DarkOutputView
 MSG: { START: "현재 수익률은 : ", END: "%입니다.\n" },
   APPEAR_RATE: 1000,
 ```
+
+---
+
+## 리팩토링 - 최종테스트 이후
+
+### 1. LottoSystem.js의 getLottoNum() 메소드
+
+- 기존 코드 : 현재의 getLottoNum 메소드는 getter 메소드다. getter 메소드는 필드를 바로 받는다는 점에서 편리하긴 하지만, 해당 메소드가 리턴하는 값은 배열이고, 배열은 참조 타입이기에 외부에서 push, pop으로 변경이 가능하다. 따라서 불변성 / 보안 문제 때문에 최대한 사용하지 않으려고 했으나, 시험 칠 때는 로직 변경을 어떻게 해야 할 지 몰라서 그냥 사용했다.
+
+  ```jsx
+  class LottoSystem {
+  	constructor() {
+  	    this.#lottoArr = [];
+  	    this.#lottoInstances = [];
+  	  }
+
+  	  createLotto(amount) {
+  	    const count = amount / LOTTO.PRICE.MIN;
+
+  	    for (let i = 0; i < count; i++) {
+  	      const randomNum = Random.pickUniqueNumbersInRange(
+  	        LOTTO.RANGE.MIN,
+  	        LOTTO.RANGE.MAX,
+  	        LOTTO.COUNT
+  	      );
+  	      const sortedNum = randomNum.sort((a, b) => a - b);
+  	      const lotto = new Lotto(sortedNum);
+
+  	      this.#lottoArr.push(sortedNum); //생성한 로또 번호를 필드에 바로 저장
+  	      this.#lottoInstances.push(lotto);
+  	    }
+  	  }
+
+  	getLottoNum() {
+  	    return this.#lottoArr; // 필드를 바로 참조하여 return
+  	  }
+
+  	  ...
+    }
+  ```
+
+- 변경한 코드 : 처음에는 getter 함수를 아예 사용하지 않는 방향으로 리팩토링 하려고 했으나, 그렇게 되면 쉬운 길을 돌아가는 것 같았다. 그래서 해당 필드의 불변성을 해치지 않는 방법이면 괜찮을 것 같다고 판단하여 전개 연산자로 필드의 복사본을 리턴하는 방식을 생각했다. 근데 리턴하는 값이 2차원 배열이다 보니 해당 배열을 복사 하더라도, 내부 값은 여전히 원본을 참조하기에 불변성을 해치게 된다. 고민 끝에 lottoArr 필드를 삭제하고 lottoInstances를 map으로 돌면서 Lotto 객체에서 랜덤 숫자 배열의 복사본을 가져오는 getter 함수를 만들어서 활용하는 방법을 채택하기로 했다. 그렇게 하게 되면, 원본 값이 지켜지기 때문에 한 단계 돌아가는 것 같아도 안전하기 때문에 괜찮다고 생각했다.
+
+```jsx
+export class Lotto {
+  #numbers;
+  constructor(numbers) {
+    this.#numbers = numbers;
+  }
+
+  toString() {
+    return [...this.#numbers];
+  }
+
+  ...
+
+ }
+```
+
+```jsx
+class LottoSystem {
+  #lottoInstances;
+  constructor() {
+    this.#lottoInstances = [];
+  }
+
+  createLotto(amount) {
+    const count = amount / LOTTO.PRICE.MIN;
+
+    for (let i = 0; i < count; i++) {
+      const randomNum = Random.pickUniqueNumbersInRange(
+        LOTTO.RANGE.MIN,
+        LOTTO.RANGE.MAX,
+        LOTTO.COUNT
+      );
+      const sortedNum = randomNum.sort((a, b) => a - b);
+
+      const lotto = new Lotto(sortedNum);
+      this.#lottoInstances.push(lotto);
+    }
+  }
+
+  getLottoNum() {
+    return this.#lottoInstances.map((lotto) => lotto.toString());
+  }
+
+	s...
+
+}
+```
