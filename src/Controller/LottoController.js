@@ -16,7 +16,7 @@ export const LottoController = {
 
     lottoSystem.match(winningNum, bonusNum);
     OutputView.printResult(lottoSystem.getResult());
-    //this.getProfit();
+    this.getProfit();
   },
 
   async getAmount() {

@@ -1,11 +1,13 @@
 import { Random } from "@woowacourse/mission-utils";
-import { LOTTO } from "../constants.js";
+import { LOTTO, RANK_PRICE } from "../constants.js";
 import { Lotto } from "./Lotto.js";
 
 class LottoSystem {
   #lottoInstances;
+  #result;
   constructor() {
     this.#lottoInstances = [];
+    this.#result = Array.from({ length: 6 }, (_, i) => [i, 0]);
   }
 
   createLotto(amount) {
@@ -35,32 +37,24 @@ class LottoSystem {
   }
 
   getResult() {
-    let result = Array.from({ length: 6 }, (_, i) => [i, 0]);
-
     this.#lottoInstances.forEach((lotto) => {
       const rank = lotto.result();
-      result[rank][1]++;
+      this.#result[rank][1]++;
     });
 
-    return new Map(result);
+    return new Map(this.#result);
   }
 
   getProfitRate() {
-    // const totalExpense = this.#lottoInstances.length * LOTTO.PRICE.MIN;
-    // let totalProfit = 0;
-    // totalProfit += result[LOTTO.MATCH.ZERO.RANK][1] * LOTTO.MATCH.ZERO.PRIZE;
-    // totalProfit +=
-    //   result[LOTTO.MATCH.TWO_BONUS.RANK][1] * LOTTO.MATCH.TWO_BONUS.PRIZE;
-    // totalProfit +=
-    //   result[LOTTO.MATCH.THREE_BONUS.RANK][1] * LOTTO.MATCH.THREE_BONUS.PRIZE;
-    // totalProfit += result[LOTTO.MATCH.FOUR.RANK][1] * LOTTO.MATCH.FOUR.PRIZE;
-    // totalProfit +=
-    //   result[LOTTO.MATCH.FOUR_BONUS.RANK][1] * LOTTO.MATCH.FOUR_BONUS.PRIZE;
-    // totalProfit += result[LOTTO.MATCH.FIVE.RANK][1] * LOTTO.MATCH.FIVE.PRIZE;
-    // return [
-    //   totalProfit,
-    //   Number(((totalProfit / totalExpense) * 100).toFixed(1)),
-    // ];
+    const totalExpense = this.#lottoInstances.length * LOTTO.PRICE.MIN;
+    let totalProfit = 0;
+    this.#result.map(
+      (rank) => (totalProfit += rank[1] * RANK_PRICE[rank[[0]]]),
+    );
+    return [
+      totalProfit,
+      Number(((totalProfit / totalExpense) * 100).toFixed(1)),
+    ];
   }
 }
 

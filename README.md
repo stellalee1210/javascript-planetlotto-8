@@ -210,7 +210,6 @@ DarkOutputView
 ### Model
 
 - [x] DarkLotto
-
   - [x] pickRandom : 어둠상인이 랜덤으로 숫자를 하나 고른다
   - [x] isMatch: 어둠 상인의 숫자와 사용자의 숫자를 비교하여 답을 확인한다
 
@@ -313,7 +312,246 @@ class LottoSystem {
     return this.#lottoInstances.map((lotto) => lotto.toString());
   }
 
-	s...
+	...
 
 }
+```
+
+### 2. LottoSystem.js의 결과 저장 로직
+
+- 기존 코드 : 결과 데이터에 대한 분리가 하고 싶어서 class 외부에 result를 배열로 선언하여 사용했는데, 다시 생각해보니 결과 값이 무방비 상태로 주어져 있어 적절하지 못한 코드라고 생각됐다. 또한, 로또 관련 상수명들이 너무 길어 가독성을 해치고 있다고 생각해 `LOTTO` 상수와 `match`, `getResult` 메소드를 리팩토링 하기로 했다. `match` 메소드는 현재 `Lotto` 클래스의 match 메소드를 통해 당첨 번호와 보너스 번호의 당첨 여부를 계산하는데 결과를 저장하는 로직은 `LottoSystem`에 있다. 따라서 `Lotto`의 match 메소드 내부에서 맞은 개수를 계산한 뒤 바로 저장까지 하게 리팩토링 하고, `LottoSystem`에서는 lottoInstance 필드를 통해서만 로또 관련 연산을 하도록 요청하게 분리를 시키려고 한다.
+
+  ```jsx
+  export const LOTTO = Object.freeze({
+    PRICE: {
+      MIN: 500,
+      MAX: 50000,
+    },
+    COUNT: 5,
+    RANGE: { MIN: 1, MAX: 30 },
+    MATCH: {
+      ZERO: { RANK: 0, NUMBER: 0, PRIZE: 0 },
+      TWO_BONUS: { RANK: 5, NUMBER: 2, PRIZE: 5000 },
+      THREE_BONUS: { RANK: 4, NUMBER: 3, PRIZE: 500000 },
+      FOUR: { RANK: 3, NUMBER: 4, PRIZE: 1500000 },
+      FOUR_BONUS: { RANK: 2, NUMBER: 4, PRIZE: 10000000 },
+      FIVE: { RANK: 1, NUMBER: 5, PRIZE: 100000000 },
+    },
+  });
+  ```
+
+  ```jsx
+  class LottoSystem {
+
+  	...
+
+
+  	match(winningNum, bonusNum) {
+  	    for (const lotto of this.#lottoInstances) {
+  	      const [match, isBonusMatch] = lotto.match(winningNum, bonusNum);
+
+  	      if (match === LOTTO.MATCH.ZERO.NUMBER) result[LOTTO.MATCH.ZERO.RANK][1]++;
+  	      if (match === LOTTO.MATCH.TWO_BONUS.NUMBER && isBonusMatch)
+  	        result[LOTTO.MATCH.TWO_BONUS.RANK][1]++;
+  	      if (match === LOTTO.MATCH.THREE_BONUS.NUMBER && isBonusMatch)
+  	        result[LOTTO.MATCH.THREE_BONUS.RANK][1]++;
+  	      if (match === LOTTO.MATCH.FOUR.NUMBER) result[LOTTO.MATCH.FOUR.RANK][1]++;
+  	      if (match === LOTTO.MATCH.FOUR_BONUS.NUMBER && isBonusMatch)
+  	        result[LOTTO.MATCH.FOUR_BONUS.RANK][1]++;
+  	      if (match === LOTTO.MATCH.FIVE.NUMBER) result[LOTTO.MATCH.FIVE.RANK][1]++;
+  	    }
+  	  }
+
+  	getResult() {
+      return new Map(result);
+    }
+
+   ...
+
+  }
+
+  const result = [
+    [LOTTO.MATCH.ZERO.RANK, 0],
+    [LOTTO.MATCH.FIVE.RANK, 0],
+    [LOTTO.MATCH.FOUR_BONUS.RANK, 0],
+    [LOTTO.MATCH.FOUR.RANK, 0],
+    [LOTTO.MATCH.THREE_BONUS.RANK, 0],
+    [LOTTO.MATCH.TWO_BONUS.RANK, 0],
+  ];
+  ```
+
+- 변경한 코드 : 기존 `LOTTO` 상수의 `MATCH` 항목이 가독성이 떨어져 key를 ‘맞춘 숫자’로 변경했다. 그리고 `Lotto` 클래스에 해당 번호의 순위를 저장할 수 있게 `rank` 필드를 만들어 내부에 저장하는 로직을 만들었다. `LottoSystem` 의 match와 getResult 메소드는 각각 반복문을 통해 `lottoInstance`필드의 내부 요소를 돌며 계산을 `Lotto` 클래스에게 넘기는 방식으로 바꿨다. 전보다 길이가 짧아지고 역할 분리가 명확해졌다.
+
+  ```jsx
+  export const LOTTO = Object.freeze({
+    PRICE: {
+      MIN: 500,
+      MAX: 50000,
+    },
+    COUNT: 5,
+    RANGE: { MIN: 1, MAX: 30 },
+    MATCH: {
+      0: { RANK: 0, NUMBER: 0, PRIZE: 0 },
+      1: { RANK: 0, NUMBER: 0, PRIZE: 0 },
+      2: { RANK: 5, NUMBER: 2, PRIZE: 5000 },
+      3: { RANK: 4, NUMBER: 3, PRIZE: 500000 },
+      4: {
+        RANK: 3,
+        NUMBER: 4,
+        PRIZE: 1500000,
+        BONUS: { RANK: 2, NUMBER: 4, PRIZE: 10000000 },
+      },
+      5: { RANK: 1, NUMBER: 5, PRIZE: 100000000 },
+    },
+  });
+  ```
+
+  ```jsx
+  class LottoSystem {
+
+  	...
+
+  	match(winningNum, bonusNum) {
+      for (const lotto of this.#lottoInstances) {
+        lotto.match(winningNum, bonusNum);
+      }
+    }
+
+    getResult() {
+      let result = Array.from({ length: 6 }, (_, i) => [i, 0]);
+
+      this.#lottoInstances.forEach((lotto) => {
+        const rank = lotto.result();
+        result[rank][1]++;
+      });
+
+      return new Map(result);
+    }
+
+  	...
+
+  }
+  ```
+
+  ```jsx
+  class Lotto {
+
+  	...
+
+  	#save(match, isBonusMatch) {
+      if (match === LOTTO.MATCH[4].NUMBER && isBonusMatch) {
+        this.#rank = LOTTO.MATCH[4].BONUS.RANK;
+        return;
+      }
+
+      this.#rank = LOTTO.MATCH[match].RANK;
+    }
+
+    result() {
+      const copy = this.#rank;
+      return copy;
+    }
+
+    ...
+
+  }
+  ```
+
+### 3. LottoSystem.js의 getProfitRate 메소드 수익률 계산 로직
+
+- 기존 코드 : 기존에는 외부에 선언된 `result` 배열에 `LOTTO` 상수명을 활용하여 일일히 모든 경우의 수에 대한 계산을 처리했었다. 매우 비효율적이였고, 가독성도 떨어졌다.
+
+```jsx
+class LottoSystem {
+
+	...
+
+	getProfitRate() {
+    const totalExpense = this.#lottoInstances.length * LOTTO.PRICE.MIN;
+    let totalProfit = 0;
+
+    totalProfit += result[LOTTO.MATCH.ZERO.RANK][1] * LOTTO.MATCH.ZERO.PRIZE;
+    totalProfit +=
+      result[LOTTO.MATCH.TWO_BONUS.RANK][1] * LOTTO.MATCH.TWO_BONUS.PRIZE;
+    totalProfit +=
+      result[LOTTO.MATCH.THREE_BONUS.RANK][1] * LOTTO.MATCH.THREE_BONUS.PRIZE;
+    totalProfit += result[LOTTO.MATCH.FOUR.RANK][1] * LOTTO.MATCH.FOUR.PRIZE;
+    totalProfit +=
+      result[LOTTO.MATCH.FOUR_BONUS.RANK][1] * LOTTO.MATCH.FOUR_BONUS.PRIZE;
+    totalProfit += result[LOTTO.MATCH.FIVE.RANK][1] * LOTTO.MATCH.FIVE.PRIZE;
+
+    return [
+      totalProfit,
+      Number(((totalProfit / totalExpense) * 100).toFixed(1)),
+    ];
+  }
+
+  ...
+
+}
+```
+
+- 변경한 코드 : `LOTTO` 상수에 있던 불필요한 요소 (NUMBER)를 삭제하고 순위 정보와 상금 정보를 `RANK_PRICE`라는 상수로 분리했다. 그리고 수익률을 계산할 때 한 번 더 사용할 수 있게 LottoSystem 내부에 result 필드를 만들어 순위를 계산할 때 저장하게 했다.
+
+```jsx
+export const LOTTO = Object.freeze({
+  PRICE: {
+    MIN: 500,
+    MAX: 50000,
+  },
+  COUNT: 5,
+  RANGE: { MIN: 1, MAX: 30 },
+  MATCH: {
+    0: { RANK: 0 },
+    1: { RANK: 0 },
+    2: { RANK: 5 },
+    3: { RANK: 4 },
+    4: { RANK: 3, BONUS: { RANK: 2 } },
+    5: { RANK: 1 },
+  },
+});
+
+export const RANK_PRICE = Object.freeze({
+  0: 0,
+  1: 100000000,
+  2: 10000000,
+  3: 1500000,
+  4: 500000,
+  5: 5000,
+});
+```
+
+```jsx
+class LottoSystem {
+  #lottoInstances;
+  #result;
+  constructor() {
+    this.#lottoInstances = [];
+    this.#result = Array.from({ length: 6 }, (_, i) => [i, 0]);
+  }
+
+	...
+
+	getResult() {
+    this.#lottoInstances.forEach((lotto) => {
+      const rank = lotto.result();
+      this.#result[rank][1]++;
+    });
+
+    return new Map(this.#result);
+  }
+
+  getProfitRate() {
+    const totalExpense = this.#lottoInstances.length * LOTTO.PRICE.MIN;
+    let totalProfit = 0;
+    this.#result.map(
+      (rank) => (totalProfit += rank[1] * RANK_PRICE[rank[[0]]]),
+    );
+    return [
+      totalProfit,
+      Number(((totalProfit / totalExpense) * 100).toFixed(1)),
+    ];
+  }
+}
+
 ```

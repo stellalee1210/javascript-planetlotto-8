@@ -11,18 +11,22 @@ export const LOTTO = Object.freeze({
   COUNT: 5,
   RANGE: { MIN: 1, MAX: 30 },
   MATCH: {
-    0: { RANK: 0, NUMBER: 0, PRIZE: 0 },
-    1: { RANK: 0, NUMBER: 0, PRIZE: 0 },
-    2: { RANK: 5, NUMBER: 2, PRIZE: 5000 },
-    3: { RANK: 4, NUMBER: 3, PRIZE: 500000 },
-    4: {
-      RANK: 3,
-      NUMBER: 4,
-      PRIZE: 1500000,
-      BONUS: { RANK: 2, NUMBER: 4, PRIZE: 10000000 },
-    },
-    5: { RANK: 1, NUMBER: 5, PRIZE: 100000000 },
+    0: { RANK: 0 },
+    1: { RANK: 0 },
+    2: { RANK: 5 },
+    3: { RANK: 4 },
+    4: { RANK: 3, BONUS: { RANK: 2 } },
+    5: { RANK: 1 },
   },
+});
+
+export const RANK_PRICE = Object.freeze({
+  0: 0,
+  1: 100000000,
+  2: 10000000,
+  3: 1500000,
+  4: 500000,
+  5: 5000,
 });
 
 export const ERROR = Object.freeze({
