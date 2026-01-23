@@ -15,7 +15,7 @@ class LottoSystem {
       const randomNum = Random.pickUniqueNumbersInRange(
         LOTTO.RANGE.MIN,
         LOTTO.RANGE.MAX,
-        LOTTO.COUNT
+        LOTTO.COUNT,
       );
       const sortedNum = randomNum.sort((a, b) => a - b);
 
@@ -30,52 +30,38 @@ class LottoSystem {
 
   match(winningNum, bonusNum) {
     for (const lotto of this.#lottoInstances) {
-      const [match, isBonusMatch] = lotto.match(winningNum, bonusNum);
-
-      if (match === LOTTO.MATCH.ZERO.NUMBER) result[LOTTO.MATCH.ZERO.RANK][1]++;
-      if (match === LOTTO.MATCH.TWO_BONUS.NUMBER && isBonusMatch)
-        result[LOTTO.MATCH.TWO_BONUS.RANK][1]++;
-      if (match === LOTTO.MATCH.THREE_BONUS.NUMBER && isBonusMatch)
-        result[LOTTO.MATCH.THREE_BONUS.RANK][1]++;
-      if (match === LOTTO.MATCH.FOUR.NUMBER) result[LOTTO.MATCH.FOUR.RANK][1]++;
-      if (match === LOTTO.MATCH.FOUR_BONUS.NUMBER && isBonusMatch)
-        result[LOTTO.MATCH.FOUR_BONUS.RANK][1]++;
-      if (match === LOTTO.MATCH.FIVE.NUMBER) result[LOTTO.MATCH.FIVE.RANK][1]++;
+      lotto.match(winningNum, bonusNum);
     }
   }
 
   getResult() {
+    let result = Array.from({ length: 6 }, (_, i) => [i, 0]);
+
+    this.#lottoInstances.forEach((lotto) => {
+      const rank = lotto.result();
+      result[rank][1]++;
+    });
+
     return new Map(result);
   }
 
   getProfitRate() {
-    const totalExpense = this.#lottoInstances.length * LOTTO.PRICE.MIN;
-    let totalProfit = 0;
-
-    totalProfit += result[LOTTO.MATCH.ZERO.RANK][1] * LOTTO.MATCH.ZERO.PRIZE;
-    totalProfit +=
-      result[LOTTO.MATCH.TWO_BONUS.RANK][1] * LOTTO.MATCH.TWO_BONUS.PRIZE;
-    totalProfit +=
-      result[LOTTO.MATCH.THREE_BONUS.RANK][1] * LOTTO.MATCH.THREE_BONUS.PRIZE;
-    totalProfit += result[LOTTO.MATCH.FOUR.RANK][1] * LOTTO.MATCH.FOUR.PRIZE;
-    totalProfit +=
-      result[LOTTO.MATCH.FOUR_BONUS.RANK][1] * LOTTO.MATCH.FOUR_BONUS.PRIZE;
-    totalProfit += result[LOTTO.MATCH.FIVE.RANK][1] * LOTTO.MATCH.FIVE.PRIZE;
-
-    return [
-      totalProfit,
-      Number(((totalProfit / totalExpense) * 100).toFixed(1)),
-    ];
+    // const totalExpense = this.#lottoInstances.length * LOTTO.PRICE.MIN;
+    // let totalProfit = 0;
+    // totalProfit += result[LOTTO.MATCH.ZERO.RANK][1] * LOTTO.MATCH.ZERO.PRIZE;
+    // totalProfit +=
+    //   result[LOTTO.MATCH.TWO_BONUS.RANK][1] * LOTTO.MATCH.TWO_BONUS.PRIZE;
+    // totalProfit +=
+    //   result[LOTTO.MATCH.THREE_BONUS.RANK][1] * LOTTO.MATCH.THREE_BONUS.PRIZE;
+    // totalProfit += result[LOTTO.MATCH.FOUR.RANK][1] * LOTTO.MATCH.FOUR.PRIZE;
+    // totalProfit +=
+    //   result[LOTTO.MATCH.FOUR_BONUS.RANK][1] * LOTTO.MATCH.FOUR_BONUS.PRIZE;
+    // totalProfit += result[LOTTO.MATCH.FIVE.RANK][1] * LOTTO.MATCH.FIVE.PRIZE;
+    // return [
+    //   totalProfit,
+    //   Number(((totalProfit / totalExpense) * 100).toFixed(1)),
+    // ];
   }
 }
-
-const result = [
-  [LOTTO.MATCH.ZERO.RANK, 0],
-  [LOTTO.MATCH.FIVE.RANK, 0],
-  [LOTTO.MATCH.FOUR_BONUS.RANK, 0],
-  [LOTTO.MATCH.FOUR.RANK, 0],
-  [LOTTO.MATCH.THREE_BONUS.RANK, 0],
-  [LOTTO.MATCH.TWO_BONUS.RANK, 0],
-];
 
 export const lottoSystem = new LottoSystem();
